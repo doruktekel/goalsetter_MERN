@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const GoalModel = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
     text: {
       type: String,
       require: [true, "Please add text !"],
@@ -12,6 +17,6 @@ const GoalModel = new mongoose.Schema(
   }
 );
 
-const Goal = mongoose.model("goal", GoalModel);
+const Goal = mongoose.model("Goal", GoalModel);
 
 module.exports = Goal;
