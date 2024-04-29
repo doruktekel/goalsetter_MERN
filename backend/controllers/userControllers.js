@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const { hashPassword, comparePassword } = require("../helpers/auth");
+const jwt = require("jsonwebtoken");
 
 // @desc Register user
 // @route Post api/users/register
@@ -33,6 +34,7 @@ const register = asyncHandler(async (req, res) => {
       _id: createdUser._id,
       name: createdUser.name,
       email: createdUser.email,
+      token: generateToken(createdUser._id),
     });
   } else {
     res.status(500);
@@ -56,6 +58,7 @@ const login = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      token: generateToken(user._id),
     });
   } else {
     res.status(500);
@@ -67,8 +70,19 @@ const login = asyncHandler(async (req, res) => {
 // @route Get api/users/getuser
 // @access Private
 const getuser = asyncHandler(async (req, res) => {
-  res.json("Getuser was successfull");
+  const { _id, name, email } = await User.findById(req.user._id);
+  res.status(200).json({
+    _id,
+    name,
+    email,
+  });
 });
+
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: "30d",
+  });
+};
 
 module.exports = {
   register,
