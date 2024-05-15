@@ -1,5 +1,5 @@
 const express = require("express");
-const dotenv = require("dotenv").config();
+require("dotenv").config();
 const { errorHandling } = require("../backend/middlewares/errorMiddleware");
 const connectDatabase = require("./config/db");
 
